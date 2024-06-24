@@ -27,12 +27,16 @@ function Login() {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${baseURL}/${LOGIN}`, {
+      const res = await axios.post(`${baseURL}/${LOGIN}`, {
         email: data.email,
         password: data.password,
       });
+      //token
+      const token = res.data.token;
+      localStorage.setItem("token", token); // Save the token to localStorage
+      console.log(token)
       setLoading(false);
-      window.location.pathname = "/";
+      // window.location.pathname = "/";
     } catch (err) {
       setLoading(false);
       if (err.response.status === 401) {
