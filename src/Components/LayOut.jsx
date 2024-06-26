@@ -16,7 +16,7 @@ const Layout = () => {
       <div className={!hideSidebar ? "col-span-10" : "col-span-12"}>
         {/* content of the right side of the page */}
         <WelcomUser name={"useName"} className='inline-block' />
-        <div className='bg-white mx-4 mt-2 rounded-lg pb-3'>
+        <div className='bg-white mx-4 mt-2 mb-4 rounded-lg pb-3' style={{minHeight: "90vh"}}>
           <div className='block'>
             <Outlet />
           </div>

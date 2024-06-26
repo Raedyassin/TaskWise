@@ -6,7 +6,7 @@ export default function SettingLayOut() {
   return (
     <div>
       <div className='px-5 pt-4'>
-        <h1 className='italic text-2xl font-bold text-primary pl-1 underline'>Settings</h1>
+        {/* <h1 className='italic text-2xl font-bold text-primary pl-1 underline'>Settings</h1> */}
         <Settingbar />
         {/* <div className="h-1 bg-tertiary"></div> */}
       </div>

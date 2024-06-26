@@ -27,27 +27,27 @@ export default function Account() {
       <div className="bg-tertiary m-5 rounded-lg shadow-xl shadow-right ">
         <form className="p-5 grid" >
           <label  htmlFor="1" >First Name:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-logoColor" placeholder="Enter you FirstName..." id='1' type="text" name="firstName" />
+          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter you FirstName..." id='1' type="text" name="firstName" />
           
           <label className="mt-1" htmlFor="2">Last Name:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-logoColor" placeholder="Enter you LastName..." id='2' type="text" name="lastName" />
+          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter you LastName..." id='2' type="text" name="lastName" />
           
           <label className="mt-1" htmlFor="3">Email:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-logoColor" placeholder="Enter you Email..." id='3' type="text" name="email" />
+          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter you Email..." id='3' type="text" name="email" />
 
           <label className="mt-1" htmlFor="4">Date of birth:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-logoColor"  id='4' type="date" name="dataOfBirth" />
+          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card"  id='4' type="date" name="dataOfBirth" />
           
           <label className="mt-1" htmlFor="5">New Password:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-logoColor" placeholder="Enter New Password..." id='5' type="password" name="newPassword" />
+          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter New Password..." id='5' type="password" name="newPassword" />
           
-          <label className="mt-1" htmlFor="5">Confirm Password:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-logoColor" placeholder="Enter New Password..." id='6' type="password" name="confirmPassword" />
+          <label className="mt-1" htmlFor="6">Confirm Password:</label>
+          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter New Password..." id='6' type="password" name="confirmPassword" />
           
 
           
           <div className="flex justify-center">
-            <button className="mt-2 font-bold text-tertiary hover:bg-secondary px-10 py-2 bg-logoColor rounded-full ">Save</button>
+            <button className="mt-2 font-bold text-tertiary hover:bg-card  bg-primary  px-10 py-2 rounded-full ">Save</button>
           </div>
         </form>
       </div>

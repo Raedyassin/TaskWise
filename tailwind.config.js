@@ -12,7 +12,9 @@ export default {
         card: "#0B5B5B",
         sideBarHover: "#094545",
         logoColor: '#ffb548',
-        projectBackGround: '#D7EDED'
+        projectBackGround: '#D7EDED',
+        rightBar: '#FFBC00',
+        sideBarColor: '#76A3AF'
       },
     },
     fontFamily: {

@@ -16,7 +16,7 @@ export default function Settingbar() {
     <div className='flex justify-items-start space-x-5 font-bold mt-5 mb-2 italic'>
       {settingData.map((item) => (
         <Link to={`${item.path}`} key={item.id}>
-          <p className={`${underLine.toLowerCase() === item.title.toLowerCase() ? 'underline' : ''} hover:text-logoColor text-xl`}>
+          <p className={`${underLine.toLowerCase() === item.title.toLowerCase() ? 'underline' : ''} hover:text-logoColor text-2xl`}>
             {item.title}
           </p>
         </Link> 

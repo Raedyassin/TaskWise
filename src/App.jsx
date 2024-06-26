@@ -12,6 +12,10 @@ import Cv from './Pages/Cv';
 import Calendar from './Pages/Calendar'
 import Layout from './Components/LayOut';
 import CreatePoject from './Pages/CreatePoject';
+import TaskLayOut from './Components/TaskLayOut';
+import Project from './Pages/project';
+import CreateTask from './Pages/CreateTask';
+import CreateNote from './Pages/CreateNote';
 
 function App() {
 
@@ -29,6 +33,11 @@ function App() {
             <Route path="/setting/account" element={<Account />} />
             <Route path="/setting/notification" element={<Notification />} />
             <Route path="/setting/cv" element={<Cv />} />
+          </Route>
+            <Route path="/project" element={<TaskLayOut />} >
+            <Route path="/project/createtask" element={<CreateTask />} />
+            <Route path="/project/createnote" element={<CreateNote />} />
+            <Route path="/project" element={<Project />} />
           </Route>
         </Route>
         <Route path="/login" element={<Login />} />

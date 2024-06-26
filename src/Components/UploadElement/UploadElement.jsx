@@ -17,7 +17,7 @@ export default function UploadElement( props) {
   return (
     <div>
       <input id='upload' className="hidden" type="file" name="file"/>
-      <label htmlFor='upload' className="inline-block cursor-pointer font-bold bg-logoColor hover:bg-secondary px-6 text-tertiary py-2 rounded-lg" onChange={handleElement}>{ props.text }</label>
+      <label htmlFor='upload' className="inline-block cursor-pointer font-bold hover:bg-card  bg-primary px-6 text-tertiary py-2 rounded-lg" onChange={handleElement}>{ props.text }</label>
     </div>
   )
 }
