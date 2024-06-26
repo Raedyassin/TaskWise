@@ -28,7 +28,9 @@ const Register = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await axios.post(`${baseURL}/${REGISTER}`, data);
+      const res = await axios.post(`${baseURL}/${REGISTER}`, data);
+      const token = res.data.token;
+      localStorage.setItem("token", token); // Save the token to localStorage
       setLoading(false);
       window.location.pathname = "/";
     } catch (err) {
