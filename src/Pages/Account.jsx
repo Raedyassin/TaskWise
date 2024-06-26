@@ -47,61 +47,124 @@ export default function Account() {
 
   const user = useSelector((state) => state.user.user); 
 
-async function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
-    let finalFromData = {};
-    let go = false;
-    if (formData.name.trim() !== "") {
-      finalFromData = { ...finalFromData, "name": formData.name.trim() };
-      go = true;
-    }
-    if (formData.email.trim() !== "") {
-      finalFromData = { ...finalFromData, "email": formData.email.trim() };
-      go = true;
-    }
-    if ((formData.newPassword.trim() !== "" && formData.confirmPassword.trim() === "")
-      || (formData.newPassword.trim() === "" && formData.confirmPassword.trim() !== "")
-      || (formData.newPassword.trim() !== "" && formData.confirmPassword.trim() !== "")) {
-        if (formData.newPassword.trim() === formData.confirmPassword.trim() ) {
-          finalFromData = { ...finalFromData, "password": formData.newPassword.trim() };
-          go = true;
-          setPasswordError(false);
-        } else {
-          setPasswordError(true);
-          return;
-        }
-    }
-    if (!go) {
-      return;
+    const finalFormData = prepareFormData();
+    if (!finalFormData) {
+        return;
     }
 
-  try {
-    // console.log(localStorage.getItem("token"))
-
-      const token = 'b0c0dcb7edd78b27356371eb9fd795f00876a298';
+    try {
+        // const token = localStorage.getItem("token");
       const response = await axios.patch(`${baseURL}/${MANAGE}`,
-        finalFromData,{
-        headers: {
-            'Authorization': `Token ${token}`,
-            // 'Content-Type': 'application/json'
-        }
-      }); 
-      console.log(response)
-      // console.log("data",response.data);
-      if (response.status !== 200) {
-        setEmailError(true)
-      } else {
-        setEmailError(false)
-        setChange(!change);
+        finalFormData, {
+          headers: {
+            Authorization: "Token " + localStorage.getItem("token"),
+            'Content-Type': 'multipart/form-data'
+                // 'Content-Type': 'application/json'
+            }
+        });
+        console.log(response);
+        if (response.status !== 200) {
+            setEmailError(true);
+        } else {
+            setEmailError(false);
+            setChange(!change);
             e.target.name.value = "";
             e.target.email.value = "";
             e.target.newPassword.value = "";
             e.target.confirmPassword.value = "";
-      }
+        }
     } catch {
-      console.log("Network Error");
+        setEmailError(true);
+        console.log("Network Error");
     }
 }
+
+function prepareFormData() {
+    let finalFormData = {};
+    let go = false;
+
+    if (formData.name.trim() !== "") {
+        finalFormData.name = formData.name.trim();
+        go = true;
+    }
+    if (formData.email.trim() !== "") {
+        finalFormData.email = formData.email.trim();
+        go = true;
+    }
+    if ((formData.newPassword.trim() !== "" && formData.confirmPassword.trim() === "") ||
+        (formData.newPassword.trim() === "" && formData.confirmPassword.trim() !== "") ||
+        (formData.newPassword.trim() !== "" && formData.confirmPassword.trim() !== "")) {
+        if (formData.newPassword.trim() === formData.confirmPassword.trim()) {
+            finalFormData.password = formData.newPassword.trim();
+            go = true;
+            setPasswordError(false);
+        } else {
+            setPasswordError(true);
+            return null;
+        }
+    }
+    return go ? finalFormData:null;
+}
+
+// async function handleSubmit(e) {
+//   e.preventDefault();
+//     let finalFromData = {};
+//     let go = false;
+//     if (formData.name.trim() !== "") {
+//       finalFromData = { ...finalFromData, "name": formData.name.trim() };
+//       go = true;
+//     }
+//     if (formData.email.trim() !== "") {
+//       finalFromData = { ...finalFromData, "email": formData.email.trim() };
+//       go = true;
+//   }
+  
+//     if ((formData.newPassword.trim() !== "" && formData.confirmPassword.trim() === "")
+//       || (formData.newPassword.trim() === "" && formData.confirmPassword.trim() !== "")
+//       || (formData.newPassword.trim() !== "" && formData.confirmPassword.trim() !== "")) {
+//         if (formData.newPassword.trim() === formData.confirmPassword.trim() ) {
+//           finalFromData = { ...finalFromData, "password": formData.newPassword.trim() };
+//           go = true;
+//           setPasswordError(false);
+//         } else {
+//           setPasswordError(true);
+//           return;
+//         }
+//     }
+//     if (!go) {
+//       return;
+//     }
+//     console.log("raed",JSON.stringify(finalFromData))
+//   try {
+//     // console.log(localStorage.getItem("token"))
+//       // console.log("token",localStorage.getItem("token"))
+//     // const token = 'b0c0dcb7edd78b27356371eb9fd795f00876a298';
+//     const token = localStorage.getItem("token");
+//       const response = await axios.patch(`${baseURL}/${MANAGE}`,
+//         JSON.stringify(finalFromData),{
+//         headers: {
+//             'Authorization': `Token ${token}`,
+//             // 'Content-Type': 'application/json'
+//         }
+//       }); 
+//       console.log(response)
+//       // console.log("data",response.data);
+//       if (response.status !== 200) {
+//         setEmailError(true)
+//       } else {
+//         setEmailError(false)
+//         setChange(!change);
+//             e.target.name.value = "";
+//             e.target.email.value = "";
+//             e.target.newPassword.value = "";
+//             e.target.confirmPassword.value = "";
+//       }
+//     } catch {
+//       console.log("Network Error");
+//     }
+// }
 
   return (
     <>

@@ -10,8 +10,8 @@ const initialState = {
 
 // Async thunk to fetch user data
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
-  const token = 'b0c0dcb7edd78b27356371eb9fd795f00876a298';
-  // const token = localStorage.getItem("token");
+  // const token = 'b0c0dcb7edd78b27356371eb9fd795f00876a298';
+  const token = localStorage.getItem("token");
   const response = await axios.get(`${baseURL}/${MANAGE}`,{
     headers: {
       'Authorization': `Token ${token}`,
@@ -31,9 +31,9 @@ const userSlice = createSlice({
     userInfo: (state) => {
       return state.user.user; // Clear the user data
     },
-    changeUserInfo: (state, action) => {
-      state.user.user = action.payload
-    }
+    // changeUserInfo: (state, action) => {
+    //   state.user.user = action.payload
+    // }
   },
   extraReducers: (builder) => {
     builder
