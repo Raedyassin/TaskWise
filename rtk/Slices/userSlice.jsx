@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {MANAGE,baseURL} from '../../src/API/API.js'
 import axios from "axios";
 
 const initialState = {
@@ -8,8 +9,14 @@ const initialState = {
 };
 
 // Async thunk to fetch user data
-export const fetchUser = createAsyncThunk("user/fetchUser", async (userId) => {
-  const response = await axios.get(`${userId}`); // API end-point URL
+export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
+  const token = 'b0c0dcb7edd78b27356371eb9fd795f00876a298';
+  // const token = localStorage.getItem("token");
+  const response = await axios.get(`${baseURL}/${MANAGE}`,{
+    headers: {
+      'Authorization': `Token ${token}`,
+    }
+  }); 
   return response.data;
 });
 
@@ -21,6 +28,12 @@ const userSlice = createSlice({
     clearUser: (state) => {
       state.user = null; // Clear the user data
     },
+    userInfo: (state) => {
+      return state.user.user; // Clear the user data
+    },
+    changeUserInfo: (state, action) => {
+      state.user.user = action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -38,6 +51,6 @@ const userSlice = createSlice({
   },
 });
 
-export const { clearUser } = userSlice.actions;
+export const { clearUser, userInfo} = userSlice.actions;
 
 export default userSlice.reducer;

@@ -24,7 +24,8 @@ export default function SideBar() {
       
       {/* use info */}
       <UserImageDesc
-          hover='text-logoColor'
+        hover='text-logoColor'
+        textColor=' '
           imageURL='../../../public-resources/download.jpeg'
           name='Raerd yassin'
           email='raed@gamil.com' />

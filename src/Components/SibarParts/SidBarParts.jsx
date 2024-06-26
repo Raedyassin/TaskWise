@@ -14,7 +14,7 @@ export default function SidBarParts(props) {
 }
 
 SidBarParts.propTypes = {
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.object.isRequired,
   title: PropTypes.string.isRequired,
   path: PropTypes.string.isRequired,
 };
