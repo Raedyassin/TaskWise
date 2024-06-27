@@ -1,5 +1,5 @@
 import UploadElement from "../Components/UploadElement/UploadElement"
-import PdfViewer from "../Components/pdfViewer/PDFViewer"
+// import PdfViewer from "../Components/pdfViewer/PDFViewer"
 export default function Cv() {
   return (
     <div>
@@ -10,12 +10,6 @@ export default function Cv() {
 
       <div className="h-1 mx-5 bg-tertiary"></div>
       {/* show your CV */}
-      <div>
-        <h1 className="text-2xl font-bold text-center my-4">View you CV</h1>
-        <div className="container mx-auto">
-            <PdfViewer fileUrl="https://web.stanford.edu/class/cs142/lectures/ReactJS.pdf" />
-        </div>
-      </div>
 
 
     </div>
