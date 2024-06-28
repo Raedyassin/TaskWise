@@ -1,11 +1,29 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import UploadElement from "../Components/UploadElement/UploadElement";
-import PdfViewer from "../Components/pdfViewer/PDFViewer";
 import { MANAGE, baseURL } from "../API/API.js";
 
 export default function Cv() {
   const [cvFile, setCvFile] = useState(null);
+
+  useEffect(() => {
+    const getcv = async () => {
+      const token = localStorage.getItem("token"); // Replace with your actual token
+      try {
+        const response = await axios.get(`${baseURL}/${MANAGE}`, {
+          headers: {
+            Authorization: "Token " + token,
+          },
+        });
+        console.log(response.data);
+        setCvFile(response.data.resume_file);
+      } catch (error) {
+        console.error("Error fetching CV:", error);
+      }
+    };
+
+    getcv();
+  }, []); // Empty dependency array ensures this effect runs only once on mount
 
   const handleFileUpload = async (file) => {
     const token = localStorage.getItem("token"); // Replace with your actual token
@@ -21,7 +39,7 @@ export default function Cv() {
         },
       });
       console.log("File uploaded successfully:", response.data);
-      setCvFile(URL.createObjectURL(file)); // To preview the uploaded PDF
+      setCvFile(response.data.resume_file); // Set the URL of the uploaded file
     } catch (error) {
       console.error("Error uploading file:", error);
     }
@@ -42,7 +60,7 @@ export default function Cv() {
       {/* show your CV */}
       <div>
         <h1 className="text-2xl font-bold text-center my-4">View your CV</h1>
-        {cvFile && <PdfViewer fileUrl={cvFile} />}
+        {cvFile && <img src={cvFile} alt="Uploaded CV" />}
       </div>
     </div>
   );
