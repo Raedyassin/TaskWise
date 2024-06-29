@@ -45,6 +45,10 @@ export default function Cv() {
     }
   };
 
+  const isPdf = (url) => {
+    return url && url.endsWith(".pdf");
+  };
+
   return (
     <div>
       <div className="flex items-center justify-between px-5 mb-3">
@@ -60,7 +64,17 @@ export default function Cv() {
       {/* show your CV */}
       <div>
         <h1 className="text-2xl font-bold text-center my-4">View your CV</h1>
-        {cvFile && <img src={cvFile} alt="Uploaded CV" />}
+        {cvFile ? (
+          isPdf(cvFile) ? (
+            <a href={cvFile} download>
+              Download CV
+            </a>
+          ) : (
+            <img src={cvFile} alt="Uploaded CV" />
+          )
+        ) : (
+          <p>No CV uploaded yet</p>
+        )}
       </div>
     </div>
   );

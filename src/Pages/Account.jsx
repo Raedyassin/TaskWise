@@ -42,7 +42,6 @@ export default function Account() {
   const user = useSelector((state) => state.user.user);
 
   async function handleSubmit(e) {
-  async function handleSubmit(e) {
     e.preventDefault();
     let finalFromData = new FormData();
     let go = false;
