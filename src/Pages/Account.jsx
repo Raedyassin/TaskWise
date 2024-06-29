@@ -100,6 +100,24 @@ export default function Account() {
       console.log("Network Error");
     }
   }
+  const handleFileUpload = async (file) => {
+    const token = localStorage.getItem("token"); // Replace with your actual token
+
+    const formData = new FormData();
+    formData.append("picture", file);
+
+    try {
+      const response = await axios.patch(`${baseURL}/${MANAGE}`, formData, {
+        headers: {
+          Authorization: "Token " + token,
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log("File uploaded successfully:", response.data);
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
 
   return (
     <>
@@ -115,7 +133,11 @@ export default function Account() {
             />
           </div>
           <div className="mr-5">
-            <UploadElement type="image" text="Upload Profile Picture" />
+            <UploadElement
+              type="image"
+              text="Upload Profile Picture"
+              onFileUpload={handleFileUpload}
+            />
           </div>
         </div>
 
