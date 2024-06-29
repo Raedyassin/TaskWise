@@ -34,6 +34,7 @@ function Login() {
       //token
       const token = res.data.token;
       localStorage.setItem("token", token); // Save the token to localStorage
+      localStorage.setItem("pass",data.password);
       setLoading(false);
       window.location.pathname = "/";
     } catch (err) {

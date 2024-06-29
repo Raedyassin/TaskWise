@@ -1,88 +1,99 @@
-// import { useState } from "react"
-import { Link } from "react-router-dom"
+import { useEffect, useState } from 'react';
+import { Link, useParams,  } from "react-router-dom"
+import { useSelector } from "react-redux";
+import {baseURL,PROJECT} from '../API/API'
 import TaskProjectComponent from "../Components/TaskProjectComponent/TaskProjectComponent";
 import NoteComponents from "../Components/NoteComponents/NoteComponents";
+import axios from 'axios';
 
-export default function project() {
-  // const [isLeader] = useState(true);
+export default function Project() {
+  const [isAdmin, SetIsAdmin] = useState(false);
+  const [navbarTasks, setNavbarTasks] = useState(true);
+  const [navbarNotes, setNavbarNotes] = useState(false);
+  const { projectId } = useParams();
+  const [projectData, setProjectData] = useState(null);
+  function showTasks() {
+    setNavbarTasks(true);
+    setNavbarNotes(false);
+  }
+  function showNotes() {
+    setNavbarTasks(false);
+    setNavbarNotes(true);
+  }
+  const user = useSelector((state) => state.user.user); 
+
+  useEffect(() => {
+    async function getProjectData() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${baseURL}/${PROJECT}${projectId}`, {
+          headers: {
+            "Authorization": `Token ${token}`,
+            'Content-Type': 'application/json'
+          }
+        });
+        setProjectData(response.data);
+        if (response.data.leader.id === user.id) {
+          SetIsAdmin(true)
+        }
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+    getProjectData();
+  }, [])
+
+  if (projectData == null) {
+    return;
+  }
   return (
-    <div className="">
+    < div className = "" >
       <div className="my-3">
-        <h1>Project created in: { "22/5/2024" }</h1>
+        <h1><span className='font-bold'>Project created in:</span> { projectData.created }</h1>
       </div>
       <div className="my-3">
-        <h1>Project Description:</h1>
-        <p className="bg-tertiary px-3 py-2 rounded-lg">{`It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like).`}</p>
+        <h1><span className='font-bold'>Project deadline:</span> { projectData.deadline?projectData.deadline:"don't selected" }</h1>
       </div>
-      {/* notes and tasks */}
+      <div className="my-3">
+        <h1 className='font-bold'>Project Description:</h1>
+        <p className="bg-tertiary px-3 py-2 rounded-lg">{projectData.description}</p>
+      </div>
+      {/* notes and tasks */ }
+      <div className="flex mx-3 py-3 justify-start gap-5">
+            <button onClick={showTasks} className={`font-bold text-2xl ${navbarTasks?"underline":""} hover:text-logoColor text-primary`}>Tasks </button>
+            <button onClick={showNotes} className={`font-bold text-2xl ${navbarNotes?"underline":""} hover:text-logoColor text-primary`}>Notes </button>
+      </div>
       <div className="mb-3 grid grid-cols-12 ">
-        <div className="col-span-6 rounded-lg bg-white">
-          {/* task header */}
-          <div className="flex mx-3 py-3 justify-between">
-            <h1 className="font-bold text-2xl text-primary">Tasks: </h1>
-            {
-              // isLeader&&
-              <Link to={"/project/createtask"} className="bg-primary hover:bg-card font-bold text-tertiary px-5 py-2 rounded-lg">Add Task</Link>
-            }
-          </div>
-          <div>
+          <div className={`mr-4 ${navbarTasks?'col-span-12 ':"hidden"} rounded-lg bg-white`}>
+              {/* task header */} 
+              <div>
+                {
+                  // isLeader&&
+              <div className={`flex mx-3 py-3 w-full justify-end`}>
+                    <Link to={`/project/${projectId}/createtask`} className= {`${isAdmin?'':'hidden'} bg-primary hover:bg-card font-bold text-tertiary px-5 py-2 rounded-lg`}>Add Task</Link>
+                  </div>
+                }
             {/* tasks */}
-            <TaskProjectComponent 
-              description={`It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking .`}
-              createdIn={'2/5/2024'}
-              deadline={'5/5/2024'}
-              members={[{id:1,name:'raed'},{id:2,name:'awab'},{id:3,name:'ayman'}]}
-            />
-            <TaskProjectComponent 
-              description={`It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking .`}
-              createdIn={'2/5/2024'}
-              deadline={'5/5/2024'}
-              members={[{id:1,name:'raed'},{id:2,name:'awab'},{id:3,name:'ayman'}]}
-            />
-            <TaskProjectComponent 
-              description={`It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking .`}
-              createdIn={'2/5/2024'}
-              deadline={'5/5/2024'}
-              members={[{id:1,name:'raed'},{id:2,name:'awab'},{id:3,name:'ayman'}]}
-            />
-            <TaskProjectComponent 
-              description={`It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking .`}
-              createdIn={'2/5/2024'}
-              deadline={'5/5/2024'}
-              members={[{id:1,name:'raed'},{id:2,name:'awab'},{id:3,name:'ayman'}]}
-            />
+                <TaskProjectComponent
+                  tasks ={projectData.tasks ? projectData.tasks : []}
+                  isAdminProject = {isAdmin}
+                  />                    
+              </div>
+            </div>
+          <div className={`mr-4  ${navbarNotes?'col-span-12 ':"hidden "}rounded-lg bg-white`}>
+              {/* Note header */}
+              <div className="flex mx-3 py-3 w-full justify-end">
+                  <Link to={`/project/${projectId}/createnote`} className="bg-primary hover:bg-card text-tertiary font-bold px-5 py-2 rounded-lg" >Add Note</Link>
+              </div>
+              {/* notes */}
+              < NoteComponents  
+                comments={projectData.comments ? projectData.comments : []}
+                userId={user.id}
+                isAdminProject = {isAdmin}
+              />
           </div>
-        </div>
-        <div className="col-span-6 mx-3 rounded-lg bg-white">
-          {/* Note header */}
-          <div className="flex mx-3 py-3 justify-between">
-            <h1 className="font-bold text-2xl text-primary">Notes: </h1>
-            <Link to={'/project/createnote'} className="bg-primary hover:bg-card text-tertiary font-bold px-5 py-2 rounded-lg" >Add Note</Link>
-          </div>
-          {/* notes */}
-          < NoteComponents 
-            description="It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking ."
-            createdBy='Raed Yassin'
-            createdIn='20/5/2024'
-          />
-          < NoteComponents
-            description="It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking ."
-            createdBy='Raed Yassin'
-            createdIn='20/5/2024'
-          />
-          < NoteComponents
-            description="It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking ."
-            createdBy='Raed Yassin'
-            createdIn='20/5/2024'
-          />
-          < NoteComponents
-            description="It is a long established fact that a reader will be distracted by the readable content of a page when looking It is a long established fact that a reader will be distracted by the readable content of a page when looking ."
-            createdBy='Raed Yassin'
-            createdIn='20/5/2024'
-          />
-        </div>
       </div>
-
-    </div>
+      
+    </ div>
   )
 }

@@ -1,13 +1,14 @@
-// this component for image, email and name of user 
 import './useimagedesc.module.css'
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
+import { useSelector } from "react-redux";
+
 export default function UserImageDesc(props) {
-  // console.log('raed',props.imageURL)
+  const user = useSelector((state) => state.user.user); 
   return (
-    <div className='p-0 m-0 my-3 mt-8 break-words grid grid-cols-4'>
+    <div className='p-0 m-0 my-3 mt-8 break-words flex justify-between gap-1'>
       <Link to="/setting/account" >
-        <div className="col-span-1 flex items-center justify-center w-12 h-12 rounded-full bg-gray-300">
+        <div className=" flex items-center justify-center w-12 h-12 rounded-full bg-gray-300">
           <img
             src={props.imageURL}
             alt="User Avatar" 
@@ -15,10 +16,10 @@ export default function UserImageDesc(props) {
             />
         </div>
       </Link>
-      <div className='col-span-3 pl-1 text-gray-400 '>
+      <div className=' pl-1 text-gray-400 '>
         <Link to="/setting/account" >
-          <h1 className={`inline-block text-base hover:${props.hover} ${props.textColor} transition-colors duration-300 ease-in-out`}>{props.name}</h1>
-          <h3 className={`inline-block text-xs hover:${props.hover} ${props.textColor} transition-colors duration-300 ease-in-out`}>{props.email}</h3>
+          <h1 className={`inline-block text-base hover:${props.hover} ${props.textColor} transition-colors duration-300 ease-in-out`}>{user?user.name:""}</h1>
+          <h3 className={`inline-block text-xs hover:${props.hover} ${props.textColor} transition-colors duration-300 ease-in-out`}>{user?user.email:""}</h3>
         </Link>
       </div>
     </div>

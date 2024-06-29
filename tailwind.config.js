@@ -21,5 +21,6 @@ export default {
       title: ["Poppins", "sans-serif"],
     },
   },
-  plugins: [],
+  plugins: [
+  ],
 };

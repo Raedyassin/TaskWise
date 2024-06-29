@@ -17,5 +17,5 @@ export default function SidbarLeaderMember(props) {
 
 SidbarLeaderMember.propTypes = {
   titleHeader: PropTypes.string.isRequired,
-  members: PropTypes.string.isRequired,
+  members: PropTypes.array.isRequired,
 };

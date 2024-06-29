@@ -32,7 +32,7 @@ const Register = () => {
       const token = res.data.token;
       localStorage.setItem("token", token); // Save the token to localStorage
       setLoading(false);
-      window.location.pathname = "/";
+      window.location.pathname = "/login";
     } catch (err) {
       setLoading(false);
       if (err.response.status === 442) {
