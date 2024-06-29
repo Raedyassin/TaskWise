@@ -1,12 +1,11 @@
-//import React from 'react'
 import style from './sidbar.module.css'
 import { Link } from "react-router-dom";
 import UserImageDesc from '../UserImageDesc/UserImageDesc.jsx'
 import { sidebarData } from './sidebarData.jsx'
 import SidBarParts from '../SibarParts/SidBarParts.jsx';
 import Logout from '../Logout/Logout.jsx';
-export default function SideBar() {
 
+export default function SideBar() {
   return (
     <div className={` ${style.n} break-words`}>
       {/* logo */}
@@ -25,7 +24,7 @@ export default function SideBar() {
       </div>
       
       {/* use info */}
-      <UserImageDesc
+      <UserImageDesc 
         hover='text-logoColor'
         textColor=' '
           imageURL='../../../public-resources/download.jpeg'

@@ -8,7 +8,6 @@ import axios from 'axios';
 
 // import Loading from "../Components/Loading/Loading";
 export default function Account() {
-  
 
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);

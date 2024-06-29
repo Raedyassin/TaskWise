@@ -8,10 +8,11 @@ export const settingData = [
     title: 'CV',
     path: '/setting/cv',
     id: 2
-  },
-  {
-    title: 'Notification',
-    path: '/setting/notification',
-    id: 3
   }
+  // ,
+  // {
+  //   title: 'Notification',
+  //   path: '/setting/notification',
+  //   id: 3
+  // }
 ]

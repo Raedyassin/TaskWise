@@ -1,7 +1,38 @@
-//import React from 'react'
 import SingleProject from "../Components/SingleProject/SingleProject"
 import CreateProjectButton from "../Components/CreateProject/CreateProjectButton"
+import { useEffect, useState } from "react";
+import { PROJECT, baseURL } from "../API/API";
+import axios from 'axios';
+
 export default function MyProjects() {
+
+  const [projects, SetProjectss] = useState(null);
+  const [status, SetStatus] = useState(false);
+
+
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        const token = localStorage.getItem("token");
+        const response = await axios.get(`${baseURL}/${PROJECT}`, {
+          headers: {
+            'Authorization': `Token ${token}`,
+          }
+        });
+        if (response.status == 200) {
+          SetProjectss(response.data);
+          SetStatus(true);
+        } else {
+          SetStatus(false);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    }
+    fetchProjects();
+  } ,[]);
+
+
   return (
     <div >
       {/* <h1 className="inline-block">My Projects</h1> */}
@@ -11,17 +42,17 @@ export default function MyProjects() {
         <CreateProjectButton  />
       </div>
       <div>
-        <SingleProject name="Raed Project"
-          description="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
-          members='5'
-          done='yes'
-        />
-        <SingleProject name="Raed Project"
-          description="It is a long established fact that a reader will be distracted by the readable content of a page when looking at its layout. The point of using Lorem Ipsum is that it has a more-or-less normal distribution of letters, as opposed to using 'Content here, content here', making it look like readable English. Many desktop publishing packages and web page editors now use Lorem Ipsum as their default model text, and a search for 'lorem ipsum' will uncover many web sites still in their infancy. Various versions have evolved over the years, sometimes by accident, sometimes on purpose (injected humour and the like)."
-          members='5'
-          done='no'
-        />
-        </div>
+        {status && projects && projects.map((item) => (
+          <SingleProject 
+            key={item.id}
+            projectId= {item.id}
+            name={item.name}
+            description={item.description}
+            createdIn={item.created}
+            deadline={item.deadline ? item.deadline : "don't selected"}
+          />
+        ))}
+      </div>
     </div>
   )
 }

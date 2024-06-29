@@ -1,30 +1,49 @@
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import {PROJECT ,baseURL} from '../../src/API/API.js'
+import axios from "axios";
 
 const initialState = {
-  value: {},
-}
+  projects: null,
+  status: "idle",
+  error: null,
+};
 
-export const counterSlice = createSlice({
-  name: 'counter',
+// Async thunk to fetch user data
+export const fetchProjects = createAsyncThunk("user/fetchUser", async () => {
+  const token = localStorage.getItem("token");
+  const response = await axios.get(`${baseURL}/${PROJECT}`,{
+    headers: {
+      'Authorization': `Token ${token}`,
+    }
+  }); 
+  return response.data;
+});
+
+
+const projectSlice = createSlice({
+  name: "projects",
   initialState,
   reducers: {
-    increment: (state) => {
-      // Redux Toolkit allows us to write "mutating" logic in reducers. It
-      // doesn't actually mutate the state because it uses the Immer library,
-      // which detects changes to a "draft state" and produces a brand new
-      // immutable state based off those changes
-      state.value += 1
-    },
-    decrement: (state) => {
-      state.value -= 1
-    },
-    incrementByAmount: (state, action) => {
-      state.value += action.payload
+    getProjects: (state) => {
+      return state.projects;
     },
   },
-})
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProjects.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(fetchProjects.fulfilled, (state, action) => {
+        state.status = "succeeded";
+        state.projects = action.payload; 
+      })
+      .addCase(fetchProjects.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      });
+  },
+});
 
-// Action creators are generated for each case reducer function
-export const { increment, decrement, incrementByAmount } = counterSlice.actions
+export const { getProjects} = projectSlice.actions;
 
-export default counterSlice.reducer
+export default projectSlice.reducer;
