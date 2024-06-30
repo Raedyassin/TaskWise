@@ -2,8 +2,9 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchUser, clearUser } from "./rtk/Slices/userSlice";
+import PropTypes from 'prop-types';
 
-const UserProfile = ({ userId }) => {
+export default function UserProfile ({ userId }){
   const dispatch = useDispatch();
   const { user, status, error } = useSelector((state) => state.user);
 
@@ -39,6 +40,9 @@ const UserProfile = ({ userId }) => {
       )}
     </div>
   );
-};
+}
 
-export default UserProfile;
+
+UserProfile.propTypes = {
+  userId: PropTypes.string.isRequired,
+};

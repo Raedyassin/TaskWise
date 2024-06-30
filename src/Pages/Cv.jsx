@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import UploadElement from "../Components/UploadElement/UploadElement";
 import { MANAGE, baseURL } from "../API/API.js";
@@ -38,7 +38,7 @@ export default function Cv() {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log("File uploaded successfully:", response.data);
+      // console.log("File uploaded successfully:", response.data);
       setCvFile(response.data.resume_file); // Set the URL of the uploaded file
     } catch (error) {
       console.error("Error uploading file:", error);
@@ -63,17 +63,17 @@ export default function Cv() {
       <div className="h-1 mx-5 bg-tertiary"></div>
       {/* show your CV */}
       <div>
-        <h1 className="text-2xl font-bold text-center my-4">View your CV</h1>
+        <h1 className="text-2xl font-bold text-center italic text-primary my-4">View your CV</h1>
         {cvFile ? (
           isPdf(cvFile) ? (
-            <a href={cvFile} download>
+            <a className="mx-5 bg-primary text-tertiary font-bold px-5 py-3 rounded-lg hover:bg-card" href={cvFile} download>
               Download CV
             </a>
           ) : (
             <img src={cvFile} alt="Uploaded CV" />
           )
         ) : (
-          <p>No CV uploaded yet</p>
+          <p className="mx-5 bg-primary text-tertiary font-bold  px-5 py-3 rounded-lg" style={{width:"16%"}} >No CV uploaded yet</p>
         )}
       </div>
     </div>

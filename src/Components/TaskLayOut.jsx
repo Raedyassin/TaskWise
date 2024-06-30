@@ -65,8 +65,9 @@ export default function TaskLayOut() {
           <div className='grid grid-cols-5 gap-4'>
             <div className='col-span-4'>
               <Outlet />
-            </div>
-            <div className='col-span-1'>
+              </div>
+              
+            <div className='fixed right-7'>
               <div className='bg-rightBar rounded-t-lg px-3 pb-3'>
                 <h1 className='py-2 italic font-bold text-primary'>Project Members:</h1>
                 <SidbarLeaderMember

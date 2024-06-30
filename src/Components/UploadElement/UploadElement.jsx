@@ -2,8 +2,8 @@ import { useState } from "react";
 import PropTypes from "prop-types";
 
 export default function UploadElement(props) {
-  const [element, setElement] = useState("");
-
+  const [, setElement] = useState("");
+  console.log("hello")
   const handleElement = (e) => {
     const file = e.target.files[0];
     console.log(file);

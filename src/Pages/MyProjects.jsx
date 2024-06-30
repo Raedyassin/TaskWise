@@ -41,7 +41,7 @@ export default function MyProjects() {
         <h1 className="italic text-2xl font-bold text-primary pl-1 underline ">My Projects</h1>
         <CreateProjectButton  />
       </div>
-      <div>
+      <div className=" flex flex-wrap gap-x-7 gap-y-5  ml-5 my-3">
         {status && projects && projects.map((item) => (
           <SingleProject 
             key={item.id}

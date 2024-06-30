@@ -114,6 +114,7 @@ export default function Account() {
         },
       });
       console.log("File uploaded successfully:", response.data);
+      dispatch(fetchUser());
     } catch (error) {
       console.error("Error uploading file:", error);
     }
@@ -145,7 +146,7 @@ export default function Account() {
 
         <div className="bg-tertiary m-5 rounded-lg shadow-xl shadow-right">
           <form className="p-5 grid" onSubmit={handleSubmit}>
-            <label htmlFor="1">Name:</label>
+            <label className="font-bold" htmlFor="1">Name:</label>
             <input
               onChange={handleChange}
               className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card"
@@ -156,7 +157,7 @@ export default function Account() {
             />
 
             <div className="flex justify-items-start gap-2">
-              <label className="mt-1" htmlFor="3">
+              <label className="mt-1 font-bold" htmlFor="3">
                 Email:
               </label>
               <span className="text-red-500 mt-1 inline-block text-sm italic">
@@ -172,7 +173,7 @@ export default function Account() {
               name="email"
             />
 
-            <label className="mt-1" htmlFor="5">
+            <label className="mt-1 font-bold" htmlFor="5">
               New Password:
             </label>
             <input
@@ -186,7 +187,7 @@ export default function Account() {
             />
 
             <div className="flex justify-items-start gap-2">
-              <label className="mt-1 inline-block" htmlFor="6">
+              <label className="mt-1 inline-block font-bold" htmlFor="6">
                 Confirm Password:
               </label>
               <span className="text-red-500 mt-1 inline-block text-sm italic">

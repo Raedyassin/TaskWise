@@ -3,10 +3,11 @@ import { useSelector } from "react-redux";
 import moment from 'moment';
 import { baseURL, PROJECT } from "../API/API";
 import axios from 'axios';
+import { useState } from "react";
 
 export default function CreateProject() {
   const userInfo = useSelector((state) => state.user.user);
-
+  const [emailError, SetEmailError] = useState("");
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -41,16 +42,18 @@ export default function CreateProject() {
             'Authorization': `Token ${token}`,
             'Content-Type': 'application/json'
           }
-        });
+      });
       if (response.status === 201) {
-        console.log("data", response.data);
+        // console.log("data", response.data);
         const id = response.data.id;
         window.location.pathname = `/project/${encodeURIComponent(id)}`;
         for (let i = 0; i < e.target.length; i++) {
           e.target[i].value = "";
         }
+        SetEmailError("")
       }
     } catch (error) {
+      SetEmailError(`There is User/s with email/s does not exist`)
       console.log(error.message);
     }
   }
@@ -67,10 +70,10 @@ export default function CreateProject() {
           <textarea className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter Project Description..." id='2' rows='7' name="projectDescription"></textarea>
 
           <label htmlFor="20" className="font-bold">Deadline:</label>
-          <input className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter Project Name..." id='20' type="datetime-local" name="deadline" />
+          <input required className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter Project Name..." id='20' type="datetime-local" name="deadline" />
           
           <div>
-            <h1 className='font-bold underline'>Members:</h1>
+            <h1 > <span className='font-bold underline'>Members:</span> <span className="ml-5 text-red-500 italic text-xs" >{emailError?emailError:"" }</span></h1>
           </div>
           <AddFieldForm membersCreated={[]} fieldName='member' />
           

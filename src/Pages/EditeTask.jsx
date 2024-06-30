@@ -4,10 +4,12 @@ import { baseURL, PROJECT, RECOMMEND, Task } from "../API/API.js";
 import moment from "moment";
 import axios from "axios";
 
-export default function CreateTask() {
-  const { projectId } = useParams();
+export default function EditeTask() {
+  const { projectId, taskID } = useParams();
 
+  const [taskData, setTaskData] = useState(null);
   const [projectMembers, setProjectMembers] = useState([]);
+  const [filteredMembers, setFilteredMembers] = useState([]);
   const [selectMember, setSelectMember] = useState([]);
   const [selectMemberBool, setSelectMemberBool] = useState(false);
   const [writeAi, setWriteAi] = useState(false);
@@ -18,7 +20,7 @@ export default function CreateTask() {
   const token = localStorage.getItem("token");
 
   useEffect(() => {
-    async function projectData() {
+    async function fetchProjectData() {
       try {
         const response = await axios.get(`${baseURL}/${PROJECT}${projectId}`, {
           headers: {
@@ -26,13 +28,40 @@ export default function CreateTask() {
             "Content-Type": "application/json",
           },
         });
-        setProjectMembers([...response.data.members_detail,response.data.leader]);
+        setProjectMembers(response.data.members_detail);
       } catch (err) {
         console.log(err.message);
       }
     }
-    projectData();
+    fetchProjectData();
   }, [projectId, token]);
+
+  useEffect(() => {
+    async function fetchTaskData() {
+      try {
+        const response = await axios.get(`${baseURL}/${Task}${taskID}`, {
+          headers: {
+            Authorization: `Token ${token}`,
+            "Content-Type": "application/json",
+          },
+        });
+        if (response.status == 200) {
+          setTaskData(response.data);
+        }
+      } catch (err) {
+        console.log(err.message);
+      }
+    }
+    fetchTaskData();
+  }, [taskID, token]);
+
+  useEffect(() => {
+    if (taskData !== null && projectMembers.length > 0) {
+      const data = projectMembers.filter((item) => taskData.user.id !== item.id);
+      setFilteredMembers(data);
+      setSelectMember([taskData.user]);
+    }
+  }, [taskData, projectMembers]);
 
   async function aiRecommendHandler() {
     const objectAi = {
@@ -43,7 +72,7 @@ export default function CreateTask() {
       setWriteAi(true);
     } else {
       try {
-        setAiload(true)
+        setAiload(true);
         setWriteAi(false);
         const response = await axios.post(`${baseURL}/${RECOMMEND}`, objectAi, {
           headers: {
@@ -52,9 +81,8 @@ export default function CreateTask() {
           },
         });
         if (response.status === 200) {
-          // setAiText("");
           setAiResponse(response.data.recommendation);
-          setAiload(false)
+          setAiload(false);
         }
       } catch (err) {
         console.log(err.message);
@@ -78,14 +106,15 @@ export default function CreateTask() {
         modified: now.toISOString(),
       };
       try {
-        const response = await axios.post(`${baseURL}/${Task}`, sendObject, {
+        const response = await axios.patch(`${baseURL}/${Task}${taskData.id}/`,
+          sendObject, {
           headers: {
             Authorization: `Token ${token}`,
             "Content-Type": "application/json",
           },
         });
-        if (response.status === 201) {
-          window.location.pathname = `${PROJECT}${projectId}`;
+        if (response.status === 200) {
+          window.location.pathname = `/project/${projectId}`;
         }
       } catch (err) {
         console.log(err.message);
@@ -96,18 +125,18 @@ export default function CreateTask() {
   }
 
   function addHandlerMember(index, id) {
-    const selected = projectMembers[index];
-    const newProjectMembers = projectMembers.filter((item) => item.id !== id);
+    const selected = filteredMembers[index];
+    const newFilteredMembers = filteredMembers.filter((item) => item.id !== id);
 
     if (selectMember.length !== 0) {
-      setProjectMembers([...newProjectMembers, selectMember[0]]);
+      setFilteredMembers([...newFilteredMembers, selectMember[0]]);
     } else {
-      setProjectMembers([...newProjectMembers]);
+      setFilteredMembers([...newFilteredMembers]);
     }
     setSelectMember([selected]);
   }
 
-  if (projectMembers.length === 0) {
+  if (filteredMembers.length === 0 || taskData === null) {
     return null;
   }
 
@@ -118,54 +147,54 @@ export default function CreateTask() {
           <p className="my-3 text-sm font-bold text-gray-500">
             We will recommend the best{" "}
             <span className="underline italic text-logoColor">members</span> for
-            do this task!
+            doing this task!
           </p>
           <h1 className="text-primary font-bold text-xl underline italic">
-            {`Let's Create a Task`}
+            {`Let's Edit the Task`}
           </h1>
         </div>
-                  <label htmlFor="AIrecommendation">TaskWise AI:</label>
-          <label
-            className={`${
-              writeAi ? "" : "hidden"
-            } mx-5 text-red-500 text-sm italic font-bold`}
-          >
-            Write AI Description first
-          </label>
-          <div className="grid grid-cols-12">
-            <div className="col-span-11">
-              <textarea
-                placeholder="Message TaskWise AI..."
-                className="w-full bg-tertiary h-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-card"
-                name="AiRecommendation"
-                rows={"2"}
-                id="AIrecommendation"
-                value={aiText}
-                onChange={(e) => setAiText(e.target.value)}
-            ></textarea>
-            </div>
-            <div className="ml-2 col-span-1">
-              <button
-                type="button"
-                onClick={aiRecommendHandler}
-                className="bg-primary hover:bg-card font-bold rounded-lg w-full h-full text-tertiary"
-              >
-                Find
-              </button>
-            </div>
-          </div>
-          <h1 className="mt-3">TaskWise AI Recommendation:</h1>
-          <div>
+        <label htmlFor="AIrecommendation">TaskWise AI:</label>
+        <label
+          className={`${
+            writeAi ? "" : "hidden"
+          } mx-5 text-red-500 text-sm italic font-bold`}
+        >
+          Write AI Description first
+        </label>
+        <div className="grid grid-cols-12">
+          <div className="col-span-11">
             <textarea
-              placeholder="TaskWise AI Response..."
+              placeholder="Message TaskWise AI..."
               className="w-full bg-tertiary h-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-card"
-              name="AiRecommendationResponse"
-              rows={"5"}
-              id="AIrecommendationResponse"
-              value={`${aiload?"Loading...":aiResponse}`}
-              readOnly
+              name="AiRecommendation"
+              rows={2}
+              id="AIrecommendation"
+              value={aiText}
+              onChange={(e) => setAiText(e.target.value)}
             ></textarea>
           </div>
+          <div className="ml-2 col-span-1">
+            <button
+              type="button"
+              onClick={aiRecommendHandler}
+              className="bg-primary hover:bg-card font-bold rounded-lg w-full h-full text-tertiary"
+            >
+              Find
+            </button>
+          </div>
+        </div>
+        <h1 className="mt-3">TaskWise AI Recommendation:</h1>
+        <div>
+          <textarea
+            placeholder="TaskWise AI Response..."
+            className="w-full bg-tertiary h-full rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-card"
+            name="AiRecommendationResponse"
+            rows={5}
+            id="AIrecommendationResponse"
+            value={aiload ? "Loading..." : aiResponse}
+            readOnly
+          ></textarea>
+        </div>
 
         <form onSubmit={handleSubmit}>
           <div className="my-3">
@@ -176,6 +205,10 @@ export default function CreateTask() {
               className="w-full bg-tertiary rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-card"
               name="name"
               id="taskName"
+              value={taskData.name}
+              onChange={(e) =>
+                setTaskData({ ...taskData, name: e.target.value })
+              }
             />
           </div>
           <div className="my-3">
@@ -184,31 +217,34 @@ export default function CreateTask() {
               placeholder="Task Description"
               className="w-full bg-tertiary rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-card"
               name="taskDescription"
-              rows={"2"}
+              rows={2}
+              value={taskData.description}
+              onChange={(e) =>
+                setTaskData({ ...taskData, description: e.target.value })
+              }
               id="taskDescription"
             ></textarea>
           </div>
-          {/* AI section */}
           <h1 className="mt-3">Select One Member:</h1>
           <div className="p-3 grid rounded-lg grid-cols-10 bg-tertiary">
             <div className="col-span-5 px-3 rounded-lg">
               <div>
                 <h1>Remember Project Members:</h1>
-                { projectMembers.length!=0 && projectMembers.map((item, index) => (
+                {filteredMembers.map((item, index) => (
                   <div
                     key={item.id}
                     className="grid grid-cols-7 mt-2 rounded-lg bg-white"
                   >
                     <div className="col-span-6 py-1 px-2">{item.name}</div>
-                    <div className="col-span-1">
-                      <button
-                        type="button"
-                        className="bg-primary text-tertiary hover:bg-card py-1 px-2 rounded-xl"
-                        onClick={() => addHandlerMember(index, item.id)}
-                      >
-                        Add
-                      </button>
-                    </div>
+                      <div className="col-span-1">
+                        <button
+                          type="button"
+                          className="bg-primary text-tertiary hover:bg-card py-1 ml-4 px-2 rounded-xl"
+                          onClick={() => addHandlerMember(index, item.id)}
+                        >
+                          Add
+                        </button>
+                      </div>
                   </div>
                 ))}
               </div>
@@ -216,13 +252,13 @@ export default function CreateTask() {
             <div className="col-span-5 px-3 rounded-lg">
               <div>
                 <h1>
-                  Selected Members:{" "}
+                  Selected Member:{" "}
                   <span
                     className={`${
                       selectMemberBool ? "" : "hidden"
                     } text-xs text-red-500`}
                   >
-                    should select one member
+                    Please select one member
                   </span>
                 </h1>
                 {selectMember.map((item) => (
@@ -233,19 +269,19 @@ export default function CreateTask() {
               </div>
             </div>
           </div>
-          {/* Recommendation section end */}
           <div className="mt-3">
             <h1 className="">Task Deadline:</h1>
             <input
+              // value={taskData.deadline}
+              required
               name="taskDeadline"
               className="w-full bg-tertiary rounded-lg px-2 py-1 focus:outline-none focus:ring-2 focus:ring-card"
               type="datetime-local"
-                required
             />
           </div>
           <div className="flex justify-center">
             <button className="font-bold text-tertiary bg-primary hover:bg-card m-3 rounded-full px-5 py-2">
-              Generate Task
+              Edit Task
             </button>
           </div>
         </form>

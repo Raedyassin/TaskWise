@@ -11,6 +11,8 @@ import { useSelector } from "react-redux";
 export default function EditeProject() {
   const [defaultEmails, setDefaultEmails] = useState([]);
   const [go, setGo] = useState(true);
+  const [emailError, SetEmailError] = useState("");
+
   const { projectId } = useParams();
   
   const [projectData, setProjectData] = useState({
@@ -61,46 +63,51 @@ export default function EditeProject() {
 
   async function handleSubmit(e) {
     e.preventDefault();
-  
+
+    const now = moment();
     const createProjectData = {
       name: e.target[0].value,
       description: e.target[1].value,
-      deadline:e.target[2].value?e.target[2].value:null,
+      created: now.toISOString(),
+      deadline: e.target[2].value,
       members: [],
       leader: {
-        email:userInfo.email,
-        name:userInfo.name,
-        password:localStorage.getItem('pass'),
+        email: userInfo.email,
+        name: userInfo.name,
+        password: localStorage.getItem('pass'),
       }
     };
+
     // get member data
-    for (let i = 3; i < e.target.length; i++){
+    for (let i = 3; i < e.target.length; i++) {
       let memberValue = e.target[i].value;
-      if (memberValue.trim() != '') {
+      if (memberValue.trim() !== '') {
         createProjectData.members.push(memberValue);
       }
     }
+
     console.log(createProjectData);
     try {
       const token = localStorage.getItem("token");
-      const response = await axios.patch(`${baseURL}/${PROJECT}${projectId}/`,
-        createProjectData,{
+      const response = await axios.post(`${baseURL}/${PROJECT}`,
+        createProjectData, {
           headers: {
             'Authorization': `Token ${token}`,
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'application/json'
           }
       });
-      if (response.status == 200) {
-        console.log("data", response.data)
+      if (response.status === 201) {
+        console.log("data", response.data);
         const id = response.data.id;
-        window.location.pathname = `/project/${id}`;
-        for (let i = 0; i < e.target.length; i++){
+        window.location.pathname = `/project/${encodeURIComponent(id)}`;
+        for (let i = 0; i < e.target.length; i++) {
           e.target[i].value = "";
         }
+        SetEmailError("")
       }
-      
-    }catch (error) {
-      console.log(error.massage);
+    } catch (error) {
+      SetEmailError(`There is User/s with email/s does not exist`)
+      console.log(error.message);
     }
   }
     const handleChange = (e) => {
@@ -132,7 +139,7 @@ export default function EditeProject() {
           </textarea>
 
           <label htmlFor="20" className="font-bold">Deadline:</label>
-          <input value={projectData.deadline?projectData.deadline:''} onChange={handleChange} className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter Project Name..." id='20' type="datetime-local" name="deadline" />
+          <input required value={projectData.deadline?projectData.deadline:''} onChange={handleChange} className="mt-1 mb-2 px-2 py-1 rounded focus:outline-none focus:ring-2 focus:ring-card" placeholder="Enter Project Name..." id='20' type="datetime-local" name="deadline" />
 
           
         {/* Leaders */}
@@ -143,8 +150,7 @@ export default function EditeProject() {
           
         {/* Members */}
         <div>
-          <h1 className='font-bold underline'>Members:</h1>
-        </div>
+          <h1 > <span className='font-bold underline'>Members:</span> <span className="ml-5 text-red-500 italic text-xs" >{emailError?emailError:"" }</span></h1>        </div>
           <AddFieldForm membersCreated={defaultEmails} fieldName='member'/>
           
           <div className="flex justify-center">

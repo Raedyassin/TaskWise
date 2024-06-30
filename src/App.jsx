@@ -13,11 +13,12 @@ import Calendar from "./Pages/Calendar";
 import Layout from "./Components/LayOut";
 import CreatePoject from "./Pages/CreatePoject";
 import TaskLayOut from "./Components/TaskLayOut";
-import Project from "./Pages/project";
+import Project from "./Pages/Project";
 import CreateTask from "./Pages/CreateTask";
 import CreateNote from "./Pages/CreateNote";
 import EditeProject from "./Pages/EditeProject";
 import EditeNote from "./Pages/EditeNote";
+import EditeTask from "./Pages/EditeTask";
 function App() {
   return (
     <>
@@ -51,6 +52,14 @@ function App() {
             <Route
               path="/project/:projectId/editenote/:noteID"
               element={<EditeNote />}
+            />
+            <Route
+              path="/project/:projectId/showenote/:noteID"
+              element={<EditeNote />}
+            />
+            <Route
+              path="/project/:projectId/editetask/:taskID"
+              element={<EditeTask />}
             />
           </Route>
         </Route>

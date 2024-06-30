@@ -24,8 +24,6 @@ export default function NoteComponents(props) {
   }
 
   function EditeNote(comment) {
-    console.log(comment.project)
-    console.log(comment.id)
     window.location.pathname = `/project/${comment.project}/editenote/${comment.id}`;
   }
 
@@ -36,29 +34,30 @@ export default function NoteComponents(props) {
   }
 
   return (
-    <>
+    <div className='flex flex-wrap gap-4'>
       {
         comments.slice().reverse().map((comment) => (
-          <div key={comment.id} className='bg-tertiary rounded-lg mx-4 mb-2 px-4 py-3'>
+          <div key={comment.id} className='bg-tertiary rounded-lg  mb-2 px-4 py-3' style={{width:"49%"}}>
             <div>
               <h1 className='text-sm'><span className='font-bold'>Created by:</span> {comment.user.name}</h1>
-              <h1 className='text-sm'><span className='font-bold'>Created on:</span> {comment.created}</h1>
+              <h1 className='text-sm'><span className='font-bold'>Created:</span> {comment.created}</h1>
             </div>
             <div>
               <h1 className='font-bold text-sm'>Note:</h1>
-              <p className='ml-3 text-sm'>{comment.text}</p>
+              <textarea className={`w-full px-3 py-2 bg-tertiary`} readOnly value={comment.text} rows={"4"}></textarea>
+              {/* <p className='ml-3 text-sm line-clamp-2 h-11'>{comment.text}</p> */}
             </div>
             {
               (props.userId === comment.user.id || props.isAdminProject) &&
               <div className=''>
                 <button onClick={()=>EditeNote(comment)} className='bg-primary hover:bg-card px-3 py-1 rounded-lg text-tertiary'>Edit</button>
-                <button onClick={() => deleteHandle(comment.id)} className='mx-5 mt-2 bg-primary hover:bg-card px-3 py-1 rounded-lg text-tertiary'>Delete</button>
+                <button onClick={() => deleteHandle(comment.id)} className='mx-2 mt-2 bg-primary hover:bg-card px-3 py-1 rounded-lg text-tertiary'>Delete</button>
               </div>
             }
           </div>
         ))
       }
-    </>
+    </div>
   );
 }
 
